@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import expressAsyncHandler from 'express-async-handler';
 import { Sequelize } from 'sequelize';
+import chalk from 'chalk';
 
 dotenv.config();
 
@@ -10,6 +11,7 @@ const sequelize = new Sequelize({
     database: 'expense-database',
     host: '127.0.0.1',
     dialect: 'postgres',
+    logging: false,
 })
 
 const PORT = process.env.PORT || 8000;
@@ -19,7 +21,7 @@ const connectDB = expressAsyncHandler(async (app) => {
 
         // Connect to the database
         await sequelize.authenticate();
-        console.log('Connected to the database');
+        console.log(chalk.green('✅ Connected to the database'));
 
         // Sync the database models with the database
         // User.sync() - This creates the table if it doesn't exist (and does nothing if it already exists)
@@ -29,15 +31,15 @@ const connectDB = expressAsyncHandler(async (app) => {
         await sequelize.sync();
         // await sequelize.sync({ alter: true });
 
-        console.log("Database synchronized");
+        console.log(chalk.blueBright("🔄 Database synchronized"));
 
         // Start the server
         app.listen(PORT, () => {
-            console.log(`Server is running on: http://localhost:${PORT}`);
+            console.log(chalk.cyan(`🚀 Server is running on: http://localhost:${PORT}`));
         });
 
     } catch (error) {
-        console.error("Error connecting or syncing the database:", error);
+        console.error(chalk.red("❌ Error connecting or syncing the database:", error));
     }
 })
 

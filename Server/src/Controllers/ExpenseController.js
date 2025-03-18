@@ -70,3 +70,25 @@ export const getUserExpenses = expressAsyncHandler(async (req, res) => {
         results: expenses,
     });
 });
+
+export const deleteExpenses = expressAsyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const user = await User.findByPk(userId);
+    if (!user) {
+        return res.status(404).json({ error: true, message: "User not found." });
+    }
+
+    const userExpenses = await UserExpenseMapping.findAll({ where: { user_id: userId } });
+    if (!userExpenses.length) {
+        return res.status(404).json({ error: true, message: "No expenses found for this user." });
+    }
+
+    await Expense.destroy({ where: { id: userExpenses.map((userExpense) => userExpense.expense_id) } }); // delete expense from Expense table
+
+    await UserExpenseMapping.destroy({ where: { user_id: userId } }); // delete expense from UserExpenseMapping table
+
+    return res.status(200).json({
+        success: true,
+        message: "Expenses deleted successfully."
+    });
+});

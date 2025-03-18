@@ -5,7 +5,7 @@ import { connectDB } from './src/Config/Database.js';
 import UserRoutes from './src/Routes/UserRoutes.js';
 import ExpenseRoutes from './src/Routes/ExpenseRoutes.js';
 import { errorHandler, NotFoundError } from './src/Utils/ErrorHandleMiddleware.js';
-import './src/Models/ModelAssociation.js'; // This must be imported because to load the association of models
+import "./src/Models/ModelAssociation/index.js";
 
 dotenv.config();
 const app = express();
